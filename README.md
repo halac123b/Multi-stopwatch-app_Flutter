@@ -1,1 +1,3 @@
-# Multi-stopwatch-app_Flutter
+# multi_stopwatch
+
+A new Flutter project.
