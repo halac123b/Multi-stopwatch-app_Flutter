@@ -57,21 +57,61 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     // Sub vào state obj MyAppState, nếu bên kia gọi notifyChange, widget này sẽ rebuild
     var appState = context.watch<MyAppState>();
+    var pair = appState.current; 
 
     // Scaffold: 1 layout widget bên trong chứa các hàng, cột
     return Scaffold(
-      body: Column(
-        children: [
-          Text('A random Bruh idea:'), 
-          // Get data từ state obj
-          Text(appState.current.asLowerCase),
-          ElevatedButton(
-            onPressed: () {
-              print('button pressed!');
-              appState.getNext(); // Change state
-            },
-            child: Text('Next'),  // Label của button
-          )],
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('A random Bruh idea:'),
+            // Get data từ state obj
+            BigCard(pair: pair),
+            SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () {
+                print('button pressed!');
+                appState.getNext(); // Change state
+              },
+              child: Text('Next'),  // Label của button
+            )],
+        ),
+      ),
+    );
+  }
+}
+
+class BigCard extends StatelessWidget {
+  const BigCard({
+    super.key,
+    required this.pair,
+  });
+
+  final WordPair pair;
+
+  @override
+  Widget build(BuildContext context) {
+    // Lấy data về Theme hiện tại của app
+    final theme = Theme.of(context);
+    // textTheme: data về phần text trong Theme
+    // displayMedium: phần text Display, hay biểu diễn các nội dung ngắn, quan trọng
+    // copyWith: copy toàn bộ field của data đó, nhưng override lại color
+    // !: vì Flutter k cho gọi hàm trên các obj có thể null (báo lỗi), nên dùng ! khi tự tin k null
+    final style = theme.textTheme.displayMedium!.copyWith(
+      color: theme.colorScheme.onPrimary,
+    );
+
+    return Card(
+      // Set màu cho card là màu primary của theme hiện tại
+      color: theme.colorScheme.primary,
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Text(
+          pair.asLowerCase,
+          style: style, 
+          // Field giúp các app Screen Reader đọc text theo 1 cách khác
+          semanticsLabel: "${pair.first} ${pair.second}"),
       ),
     );
   }
